@@ -5,7 +5,7 @@ from gameparts import Board
 
 pygame.init()
 
-# Здесь определены разные константы, например 
+# Здесь определены разные константы, например
 # размер ячейки и доски, цвет и толщина линий.
 # Эти константы используются при отрисовке графики
 CELL_SIZE = 100
@@ -29,6 +29,8 @@ pygame.display.set_caption('Крестики-нолики')
 screen.fill(BG_COLOR)
 
 # Функция, которая отвечает за отрисовку горизонтальных и вертикальных линий
+
+
 def draw_lines():
     # Горизонтальные линии
     for i in range(1, BOARD_SIZE):
@@ -51,7 +53,7 @@ def draw_lines():
         )
 
 
-# Функция, которая отвечает за отрисовку фигур 
+# Функция, которая отвечает за отрисовку фигур
 # (крестиков и ноликов) на доске
 def draw_figures(board):
     for row in range(BOARD_SIZE):
@@ -93,6 +95,8 @@ def draw_figures(board):
                 )
 
 # Вот новая функция
+
+
 def save_result(text):
     with open('results.txt', 'a', encoding='utf-8') as file:
         file.write(text + '\n')
@@ -115,29 +119,27 @@ def main():
             clicked_col = mouse_x // CELL_SIZE
             clicked_row = mouse_y // CELL_SIZE
 
-            # В метод make_move передаются те координаты, которые ввёл пользователь
-            row = int(clicked_row)
-            column = int(clicked_col)
-            game.make_move(row, column, current_player)
-            draw_lines()
-            # После каждого хода надо делать проверку на победу и на ничью
-            if game.check_win(current_player):
-                game_result = f'\nПобедили {current_player}.\n'
-                print(game_result)
-                save_result(game_result)
-                running = False
-            elif game.is_board_full():
-                game_result = '\nНичья!\n'
-                print(game_result)
-                save_result(game_result)
-                running = False
+            if game.board[clicked_row][clicked_col] == ' ':
+                game.make_move(clicked_row, clicked_col, current_player)
+                # После каждого хода надо делать проверку на победу и на ничью
+                if game.check_win(current_player):
+                    game_result = f'\nПобедили {current_player}.\n'
+                    print(game_result)
+                    save_result(game_result)
+                    running = False
+                elif game.is_board_full():
+                    game_result = '\nНичья!\n'
+                    print(game_result)
+                    save_result(game_result)
+                    running = False
 
-        current_player = 'O' if current_player == 'X' else 'X'
-        draw_figures(game.board)
+                current_player = 'O' if current_player == 'X' else 'X'
+                draw_figures(game.board)
         # Обновить окно игры
         pygame.display.update()
     # Деинициализирует все модули Pygame, которые были инициализированы ранее
     pygame.quit()
+
 
 # Всё, что ниже этой инструкции, не будет импортироваться,
 # но будет выполняться при запуске файла game.py
